@@ -1,0 +1,19 @@
+import speech_recognition as sr
+import sounddevice as sd
+from scipy.io.wavfile import write
+import os
+
+fs = 44100  # this is the frequency sampling; also: 4999, 64000
+seconds = 5  # Duration of recording
+myrecording = sd.rec(int(seconds * fs), samplerate=fs, channels=2)
+print("Starting: Speak now!")
+sd.wait()  # Wait until recording is finished
+print("finished")
+write('output.wav', fs, myrecording)  # Save as WAV file
+
+rec = sr.Recognizer()
+hearing = sr.AudioFile('output.wav')
+with hearing as source:
+    audio = rec.record(source)
+    text = rec.recognize_google(audio)
+    print("Text: ".format(text))
